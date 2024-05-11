@@ -1,8 +1,3 @@
-function funcs = cdk1_cyclin_ode
-    funcs.dydt = @cdk1_cyclin_ode_dydt;
-    % funcs.nullclines = @cdk1_cyclin_ode_nullclines;
-end
-
 %{
 
 === Parameter Values ===
@@ -22,6 +17,12 @@ end
 
 %}
 
+% Exposer function.
+function funcs = cdk1_cyclin_ode
+    funcs.dydt = @cdk1_cyclin_ode_dydt;
+    funcs.nullclines = @cdk1_cyclin_ode_nullclines;
+end
+
 
 function dydt = cdk1_cyclin_ode_dydt(t, y, params, consts)
 
@@ -31,26 +32,39 @@ function dydt = cdk1_cyclin_ode_dydt(t, y, params, consts)
     [cdk1_expr, cyclin_expr] = cdk1_cyclin_ode_exprs;
     dydt = [ double(subs(cdk1_expr, {ksynth acdc25 bcdc25 ncdc25 awee1 bwee1 nwee1 adeg bdeg ndeg EC50cdc25 EC50wee1 EC50deg Cdk1 Cyc}, ...
                 {params.ksynth params.acdc25 params.bcdc25 params.ncdc25 params.awee1 params.bwee1 params.nwee1 params.adeg params.bdeg params.ndeg ...
-                consts.EC50cdc25 consts.EC50wee1 consts.EC50deg y(1), y(2)})) ...
+                consts.EC50cdc25 consts.EC50wee1 consts.EC50deg y(1) y(2)})) ...
 		; ...
             double(subs(cyclin_expr, {ksynth acdc25 bcdc25 ncdc25 awee1 bwee1 nwee1 adeg bdeg ndeg EC50cdc25 EC50wee1 EC50deg Cdk1 Cyc}, ...
                 {params.ksynth params.acdc25 params.bcdc25 params.ncdc25 params.awee1 params.bwee1 params.nwee1 params.adeg params.bdeg params.ndeg ...
-                consts.EC50cdc25 consts.EC50wee1 consts.EC50deg y(1), y(2)}))
+                consts.EC50cdc25 consts.EC50wee1 consts.EC50deg y(1) y(2)}))
         ];
 end
 
 
-% function [cdk1, cyclin] = cdk1_cyclin_ode_nullclines(params, consts)
-% 
-%     % solve ckd1 rate eqn for nullcline.
-%     syms ksynth;
-%     cdk1_eqn = ksynth ...
-% 	    + (acdc25 + params.bcdc25*(y(1)^params.ncdc25)/(consts.EC50cdc25^params.ncdc25 + y(1)^params.ncdc25))*(y(2)-y(1)) ...
-% 	    - (params.awee1 + params.bwee1*(consts.EC50wee1^params.nwee1)/(consts.EC50wee1^params.nwee1 + y(1)^params.nwee1))*y(1) ...
-% 	    - (params.adeg + params.bdeg*(y(1)^params.ndeg)/(consts.EC50deg^params.ndeg + y(1)^params.ndeg))*y(1);
-% 
-%     cdk1 = 
-% end
+function [cdk1_val, cyclin_val] = cdk1_cyclin_ode_nullclines(params, consts)
+
+	syms ksynth acdc25 bcdc25 ncdc25 awee1 bwee1 nwee1 adeg bdeg ndeg EC50cdc25 EC50wee1 EC50deg Cdk1 Cyc;
+	syms rate;
+
+	% set up helpers.
+	null_eqn = rate == 0;
+	[cdk1_expr, cyclin_expr] = cdk1_cyclin_ode_exprs;
+    
+	% solve rate eqns for nullclines.
+	% - Cdk1.
+    cdk1_eqn = compose(null_eqn, cdk1_expr);
+    cdk1_eqn = subs(cdk1_eqn, {ksynth acdc25 bcdc25 ncdc25 awee1 bwee1 nwee1 adeg bdeg ndeg EC50cdc25 EC50wee1 EC50deg}, ...
+                {params.ksynth params.acdc25 params.bcdc25 params.ncdc25 params.awee1 params.bwee1 params.nwee1 params.adeg params.bdeg params.ndeg ...
+                consts.EC50cdc25 consts.EC50wee1 consts.EC50deg})
+	cdk1_val = solve(cdk1_eqn, Cdk1);
+	% - Cyclin.
+	cyclin_eqn = compose(null_eqn, cyclin_expr);
+    cyclin_eqn = subs(cyclin_eqn, {ksynth acdc25 bcdc25 ncdc25 awee1 bwee1 nwee1 adeg bdeg ndeg EC50cdc25 EC50wee1 EC50deg}, ...
+                {params.ksynth params.acdc25 params.bcdc25 params.ncdc25 params.awee1 params.bwee1 params.nwee1 params.adeg params.bdeg params.ndeg ...
+                consts.EC50cdc25 consts.EC50wee1 consts.EC50deg})
+	cyclin_val = solve(cyclin_eqn, Cyc);
+
+end
 
 
 function [cdk1_expr, cyclin_expr] = cdk1_cyclin_ode_exprs
