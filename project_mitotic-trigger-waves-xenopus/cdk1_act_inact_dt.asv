@@ -8,7 +8,7 @@ end
 % PDE Function.
 function [c,f,s] = Cdk1_PDE(x, t, u, dudx, params)
 
-    % ** Independent vars are encoded as: u = [Cdk1_act; Cdk1_inact] **
+    % ** Independent vars are encoded as vector: [Cdk1_act; Cdk1_inact] **
         
     % === Define dependent variables. ===
     % diffusion constant in micro-m^2 min^-1.
@@ -44,16 +44,20 @@ function [c,f,s] = Cdk1_PDE(x, t, u, dudx, params)
     f = [Dp*dudx(1); Dp*dudx(2)];
 
     % source term.
-    s = [   ... 
-			ksynth ...
-			+ (acdc25 + bcdc25*(u(1)^ncdc25)/(consts.EC50cdc25^ncdc25 + u(1)^ncdc25))*u(2) ...
-			- (awee1 + bwee1*(consts.EC50wee1^nwee1)/(consts.EC50wee1^nwee1 + u(1)^nwee1))*u(1) ...
-			- (adeg + bdeg*(u(1)^ndeg)/(consts.EC50deg^ndeg + u(1)^ndeg))*u(1) ...
-		;
-			- (acdc25 + bcdc25*(u(1)^ncdc25)/(consts.EC50cdc25^ncdc25 + u(1)^ncdc25))*u(2) ...
-			+ (awee1 + bwee1*(consts.EC50wee1^nwee1)/(consts.EC50wee1^nwee1 + u(1)^nwee1))*u(1) ...
-			- (adeg + bdeg*(u(1)^ndeg)/(consts.EC50deg^ndeg + u(1)^ndeg))*u(2) ...
-        ];
+    s = [ 
+            ksynth + (acdc25 + bcdc25*(u))
+        ]
+
+    % ------
+
+    D = P(1);
+    omega1 = P(2);
+    sigm = P(3);
+
+    % PDE
+    c = [1;1];
+    f = [D;1].*dudx;
+    s = [ u(1)^2/(0.2+u(2)) - u(1) + sigm ; omega1*(u(1)^2 - u(2)) ];
 end
 
 
