@@ -6,7 +6,7 @@ end
 
 
 % PDE Function.
-function [c,f,s] = Cdk1_PDE(x, t, u, dudx, params)
+function [c,f,s] = Cdk1_PDE(x, t, u, dudx, consts)
 
     % ** Independent vars are encoded as: u = [Cdk1_act; Cdk1_inact] **
         
@@ -19,12 +19,13 @@ function [c,f,s] = Cdk1_PDE(x, t, u, dudx, params)
 
     % rate constants in min^-1.
     % -  for Cdc25.
-    acdc25 = 0.8;
-    bcdc25 = 4;
+    % draw from x-dependent function.
+    acdc25 = consts.scale * acdc25_at_x(x);
+    bcdc25 = consts.scale * bcdc25_at_x(x);
     
     % -  for Wee1.
-    awee1 = 0.4;
-    bwee1 = 2;
+    awee1 = consts.scale * 0.4;
+    bwee1 = consts.scale * 2;
     
     % -  for degradation.
     adeg = 0.01;
@@ -57,7 +58,28 @@ function [c,f,s] = Cdk1_PDE(x, t, u, dudx, params)
 end
 
 
-% function []
+function [u0] = Ckd1_init(x)
+    u0 = [0; 0];
+end
+
+
+% functions to encode the inhomogeneity induced by centrome
+% as 50% higher concentration in the middle 5-micron section.
+function [acdc25] = acdc25_at_x(x)
+    if and(x>=-2.5, x<2.5)
+        acdc25 = 0.12;
+    else
+        acdc25 = 0.08;
+    end
+end
+
+function [bcdc25] = bcdc25_at_x(x)
+    if and(x>=-2.5, x<2.5)
+        bcdc25 = 0.6;
+    else
+        bcdc25 = 0.4;
+    end
+end
 
 
 %{
