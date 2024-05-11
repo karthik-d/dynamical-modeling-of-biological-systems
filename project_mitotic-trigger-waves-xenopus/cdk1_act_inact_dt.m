@@ -12,7 +12,7 @@ function [c,f,s] = Cdk1_PDE(x, t, u, dudx, consts)
         
     % === Define dependent variables. ===
     % syntesis const.
-    ksynth = 1.5;
+    ksynth = 1.5*2.5;
 
     % rate constants in min^-1.
     % -  for Cdc25.
@@ -63,10 +63,10 @@ end
 function [pl, ql, pr, qr] = Cdk1_boundaries(xl, ul, xr, ur, t, consts)
     % boundary condition: flux is 0 at both ends - xl and xr.
     pl = [0; 0];
-    ql = [1/consts.Dp; 1/consts.Dp];
+    ql = [1; 1];
     % -- 
     pr = [0; 0];
-    qr = [1/consts.Dp; 1/consts.Dp];
+    qr = [1; 1];
 end
 
 
