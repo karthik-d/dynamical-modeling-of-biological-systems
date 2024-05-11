@@ -1,7 +1,7 @@
-function [pde_funcs] = cdk1_act_inact_dt()
-    pde_funcs.Ckd1_PDE = @Cdk1_PDE;
-    pde_funcs.Ckd1_init = @Cdk1_init;
-    pde_funcs.Ckd1_boundaries = @Cdk1_boundaries;
+function pde_funcs = cdk1_act_inact_dt
+    pde_funcs.Cdk1_PDE = @Cdk1_PDE;
+    pde_funcs.Cdk1_init = @Cdk1_init;
+    pde_funcs.Cdk1_boundaries = @Cdk1_boundaries;
 end
 
 
@@ -11,9 +11,6 @@ function [c,f,s] = Cdk1_PDE(x, t, u, dudx, consts)
     % ** Independent vars are encoded as: u = [Cdk1_act; Cdk1_inact] **
         
     % === Define dependent variables. ===
-    % diffusion constant in micro-m^2 min^-1.
-    consts.Dp = 600;
-
     % syntesis const.
     ksynth = 1.5;
 
@@ -39,7 +36,7 @@ function [c,f,s] = Cdk1_PDE(x, t, u, dudx, consts)
     % === Define PDE coefficients. ===
     
     % time coupling term.
-    c = [1; 1]
+    c = [1; 1];
 
     % flux term.
     f = [consts.Dp*dudx(1); consts.Dp*dudx(2)];
@@ -58,18 +55,18 @@ function [c,f,s] = Cdk1_PDE(x, t, u, dudx, consts)
 end
 
 
-function [u0] = Ckd1_init(x, consts)
+function [u0] = Cdk1_init(x, consts)
     u0 = [0; 0];
 end
 
 
-function [pl, ql, pr, qr] = Ckd1_boundaries(xl, ul, xr, ur, t, consts)
+function [pl, ql, pr, qr] = Cdk1_boundaries(xl, ul, xr, ur, t, consts)
     % boundary condition: flux is 0 at both ends - xl and xr.
-    pl = 0;
-    ql = 1/consts.Dp;
+    pl = [0; 0];
+    ql = [1/consts.Dp; 1/consts.Dp];
     % -- 
-    pr = 0;
-    qr = 1/consts.Dp;
+    pr = [0; 0];
+    qr = [1/consts.Dp; 1/consts.Dp];
 end
 
 
