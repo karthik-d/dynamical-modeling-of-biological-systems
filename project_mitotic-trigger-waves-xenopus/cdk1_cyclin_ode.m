@@ -59,7 +59,7 @@ function dydt = cdk1_cyclin_ode_dydt_array(t, y, params, consts)
 end
 
 
-function [cdk1_val_pts, cyclin_val] = cdk1_cyclin_ode_nullclines(params, consts, cyc_vals)
+function [cdk1_val_pts, cyclin_val] = cdk1_cyclin_ode_nullclines(params, consts, cyc_vals, hyst_range)
 
 	syms ksynth acdc25 bcdc25 ncdc25 awee1 bwee1 nwee1 adeg bdeg ndeg EC50cdc25 EC50wee1 EC50deg Cdk1 Cyc;
 	syms rate;
@@ -77,8 +77,17 @@ function [cdk1_val_pts, cyclin_val] = cdk1_cyclin_ode_nullclines(params, consts,
         cdk1_eqn = subs(cdk1_eqn, {ksynth acdc25 bcdc25 ncdc25 awee1 bwee1 nwee1 adeg bdeg ndeg EC50cdc25 EC50wee1 EC50deg Cyc}, ...
                     {params.ksynth params.acdc25 params.bcdc25 params.ncdc25 params.awee1 params.bwee1 params.nwee1 params.adeg params.bdeg params.ndeg ...
                     consts.EC50cdc25 consts.EC50wee1 consts.EC50deg cyc_vals(k)});
-	    cdk1_val_pts(k, 2) = vpasolve(cdk1_eqn, Cdk1);
-        cdk1_val_pts(k, 1) = cyc_vals(k);
+
+        % attempt to find multiple solns if Cyc lies in hyst_range.
+        if and(cyc_vals(k)>=hyst_range(1), cyc_vals(k)<=hyst_range(2))
+            % get first soln; closest to zero.
+            first_soln = vpasolve(cdk1_eqn, Cdk1, 0);
+            cdk1_val_pts(k, 2) = vpasolve(cdk1_eqn, Cdk1);
+            cdk1_val_pts(k, 1) = cyc_vals(k);
+        else
+	        cdk1_val_pts(k, 2) = vpasolve(cdk1_eqn, Cdk1);
+            cdk1_val_pts(k, 1) = cyc_vals(k);
+        end
     end
     
 	% - Cyclin.
