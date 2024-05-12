@@ -84,17 +84,20 @@ function [cdk1_val_pts, cyclin_val] = cdk1_cyclin_ode_nullclines(params, consts,
     % increment intervals for searching multiple solutions for Cdk1 in
     % hysteretic region -- smaller value => multiple solns very close
     % together are missed.
-    hyst_dx = 1;
+    hyst_dx = 2;
     % attempt to find multiple solns if Cyc lies in hyst_range.
     addnl_k = k+1;
     for addnl_val=hyst_range(1):1:hyst_range(2)
+
         % set up the equation.
         cdk1_eqn = compose(null_eqn, cdk1_expr);
         cdk1_eqn = subs(cdk1_eqn, {ksynth acdc25 bcdc25 ncdc25 awee1 bwee1 nwee1 adeg bdeg ndeg EC50cdc25 EC50wee1 EC50deg Cyc}, ...
                     {params.ksynth params.acdc25 params.bcdc25 params.ncdc25 params.awee1 params.bwee1 params.nwee1 params.adeg params.bdeg params.ndeg ...
                     consts.EC50cdc25 consts.EC50wee1 consts.EC50deg addnl_val});
+        
         % get first soln; closest to zero.
         first_soln = vpasolve(cdk1_eqn, Cdk1, 0);
+        
         % now move soln intervals by hyst_dx to search.
         solns_cnt = 1;
         for soln_start=first_soln+hyst_dx:hyst_dx:max(cyc_vals)
