@@ -8,3 +8,4 @@ function [sphere_surface_eqn, wave_eqn] = surface_intersection_eqns
     sphere_surface_eqn = y^2 + x^2 == rc^2;
     wave_eqn = (y-y0)^2 + (x-x0)^2 == v^2*(t-t0)^2;
 end
+
