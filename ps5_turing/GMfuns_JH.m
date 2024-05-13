@@ -1,4 +1,8 @@
+<<<<<<< HEAD
 %%    GMfuns_JH
+=======
+%    GMfuns_JH
+>>>>>>> c988670df76dcf42daf1b702dd605bd98907b7a9
 %   
 %in this script, we define the necessary functions for our Gierer-Meinhardt
 %system:
