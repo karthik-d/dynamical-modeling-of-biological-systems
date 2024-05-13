@@ -56,24 +56,24 @@ end
 
 
 function [u0] = Cdk1_init(x, consts)
-    u0 = [0; 5];
+    u0 = [0; 0];
 end
 
 
 function [pl, ql, pr, qr] = Cdk1_boundaries(xl, ul, xr, ur, t, consts)
     % boundary condition: flux is 0 at both ends - xl and xr.
     pl = [0; 0];
-    ql = [1; 1];
+    ql = [1/consts.Dp; 1/consts.Dp];
     % -- 
     pr = [0; 0];
-    qr = [1; 1];
+    qr = [1/consts.Dp; 1/consts.Dp];
 end
 
 
 % functions to encode the inhomogeneity induced by centrome
 % as 50% higher concentration in the middle 5-micron section.
 function [acdc25] = acdc25_at_x(x, consts)
-    if and(x>=-5, x<5)
+    if and(x>=-2.5, x<2.5)
         acdc25 = consts.scale * 0.12;
     else
         acdc25 = consts.scale * 0.08;
@@ -81,7 +81,7 @@ function [acdc25] = acdc25_at_x(x, consts)
 end
 
 function [bcdc25] = bcdc25_at_x(x, consts)
-    if and(x>=-5, x<5)
+    if and(x>=-2.5, x<2.5)
         bcdc25 = consts.scale * 0.6;
     else
         bcdc25 = consts.scale * 0.4;
