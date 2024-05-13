@@ -1,4 +1,4 @@
-function pde_funcs = cdk1_act_inact_dt
+function pde_funcs = cdk1_act_inact_pde
     pde_funcs.Cdk1_PDE = @Cdk1_PDE;
     pde_funcs.Cdk1_init = @Cdk1_init;
     pde_funcs.Cdk1_boundaries = @Cdk1_boundaries;
