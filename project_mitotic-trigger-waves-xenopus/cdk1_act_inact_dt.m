@@ -12,13 +12,13 @@ function [c,f,s] = Cdk1_PDE(x, t, u, dudx, consts)
         
     % === Define dependent variables. ===
     % syntesis const.
-    ksynth = 1.5*2.5;
+    ksynth = 1.5;
 
     % rate constants in min^-1.
     % -  for Cdc25.
     % draw from x-dependent function.
-    acdc25 = consts.scale * acdc25_at_x(x);
-    bcdc25 = consts.scale * bcdc25_at_x(x);
+    acdc25 = consts.scale * acdc25_at_x(x, consts);
+    bcdc25 = consts.scale * bcdc25_at_x(x, consts);
     
     % -  for Wee1.
     awee1 = consts.scale * 0.4;
@@ -56,7 +56,7 @@ end
 
 
 function [u0] = Cdk1_init(x, consts)
-    u0 = [0; 0];
+    u0 = [0; 5];
 end
 
 
@@ -72,19 +72,19 @@ end
 
 % functions to encode the inhomogeneity induced by centrome
 % as 50% higher concentration in the middle 5-micron section.
-function [acdc25] = acdc25_at_x(x)
-    if and(x>=-2.5, x<2.5)
-        acdc25 = 0.12;
+function [acdc25] = acdc25_at_x(x, consts)
+    if and(x>=-5, x<5)
+        acdc25 = consts.scale * 0.12;
     else
-        acdc25 = 0.08;
+        acdc25 = consts.scale * 0.08;
     end
 end
 
-function [bcdc25] = bcdc25_at_x(x)
-    if and(x>=-2.5, x<2.5)
-        bcdc25 = 0.6;
+function [bcdc25] = bcdc25_at_x(x, consts)
+    if and(x>=-5, x<5)
+        bcdc25 = consts.scale * 0.6;
     else
-        bcdc25 = 0.4;
+        bcdc25 = consts.scale * 0.4;
     end
 end
 
