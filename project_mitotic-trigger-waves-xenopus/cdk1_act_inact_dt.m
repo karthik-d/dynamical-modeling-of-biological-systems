@@ -74,7 +74,7 @@ end
 % as 50% higher concentration in the middle 5-micron section.
 function [acdc25] = acdc25_at_x(x, consts)
     if and(x>=-2.5, x<2.5)
-        acdc25 = consts.scale * 0.12;
+        acdc25 = consts.scale * 0.14;
     else
         acdc25 = consts.scale * 0.08;
     end
@@ -82,7 +82,7 @@ end
 
 function [bcdc25] = bcdc25_at_x(x, consts)
     if and(x>=-2.5, x<2.5)
-        bcdc25 = consts.scale * 0.6;
+        bcdc25 = consts.scale * 0.7;
     else
         bcdc25 = consts.scale * 0.4;
     end
