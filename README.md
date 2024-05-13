@@ -3,6 +3,7 @@
 ## _Project_: Cell-Cycle Oscillations and Mitotic Trigger Waves for Spatiotemporal Coordination
 - [Project Summary Report [PDF]](./project_mitotic-trigger-waves/docs/project-report.pdf).
 - [Code Modules](./project_mitotic-trigger-waves).
+- [Analysis Code Snapshot [Matlab LiveScript PDF]](./project_mitotic-trigger-waves/docs/code-notebook.pdf).
 
 ## Experiments and Analyses
 EX09: One-dimensional diffusion analysis.
