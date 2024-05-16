@@ -11,5 +11,9 @@
 ### Experiments and Analyses
 
 - EX09: One-dimensional diffusion analysis.
-- PS04: Effect of number of molecules on the quality of Gillespie simulations.
-- PS05: Turing systems.
+- ---
+- PS01: Protein Phosphorylation Switch.
+- PS02: Collin's Switch.
+- PS03: Hudspeth's Hair Bundle Oscillations.
+- PS04: Quality of Stochastic Oscillations (simulated using Gillespie's Algorithm).
+- PS05: Turing Systems.
